@@ -51,18 +51,22 @@ YourCourseFolder/               # Any offline course you are watching
 │
 ├─ run.bat                      # Only this file is needed here
 │
-├─ Chapter 1/
-│   ├─ video1.mp4
-│   ├─ video2.mp4
-│   └─ (🌸)/                    # Watched videos (partial chapter)
-│
-├─ Chapter 2/
-│   ├─ video1.mp4
-│   └─ ...
-│
 └─ (🌸)/                        # Fully watched chapters
-    ├─ Chapter 3/
-    └─ Chapter 4/
+│   ├─ Chapter 1/
+│   └─ Chapter 2/
+│
+├─ Chapter 3/
+│   ├─ (🌸)/                    # Watched videos (partial chapter)
+│   │   ├─ video1.mp4
+│   │   └─ video2.mp4
+│   │
+│   ├─ video3.mp4
+│   └─ video4.mp4
+│
+└─ Chapter 4/
+    ├─ video1.mp4
+    └─ ...
+
 ```
 
 ## License
