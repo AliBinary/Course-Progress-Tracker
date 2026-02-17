@@ -193,7 +193,7 @@ def scan_course(root_path: str, video_ext, watched_subfolder):
 total, watched, chapters, total_size, watched_size = scan_course(
     course_root, VIDEO_EXT, watched_folder_name
 )
-progress_pct = (watched / total * 100) if total > 0 else 0
+progress_pct = (watched_size / total_size * 100) if total_size > 0 else 0
 
 # ──────────────────────────────────────────────
 # Page header with dynamic watched folder
@@ -222,26 +222,67 @@ with col3:
 # Overall progress bar
 # ──────────────────────────────────────────────
 st.markdown("### Overall Progress")
+
 progress_html = f"""
-<div style="position: relative; background: #e8ecef; border-radius: 999px; height: 50px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+<style>
+@keyframes waveMove {{
+    0% {{ transform: translateX(-100%); }}
+    100% {{ transform: translateX(200%); }}
+}}
+</style>
+<div style="
+    position: relative;
+    background: #e5e7eb;
+    border-radius: 999px;
+    height: 52px;
+    overflow: hidden;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.12);
+">
+    <!-- Filled Progress -->
     <div style="
         position: absolute;
         top: 0; left: 0; bottom: 0;
         width: {progress_pct}%;
-        background: linear-gradient(90deg, #6366f1, #a855f7);
+        background: linear-gradient(90deg, #2563eb, #06b6d4);
         transition: width 1s ease-out;
+        overflow: hidden;
+    ">
+        <!-- Wave effect -->
+        <div style="
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 65%;
+            background: linear-gradient(
+                120deg,
+                rgba(255,255,255,0.0) 0%,
+                rgba(255,255,255,0.35) 40%,
+                rgba(255,255,255,0.6) 50%,
+                rgba(255,255,255,0.35) 60%,
+                rgba(255,255,255,0.0) 100%
+            );
+            animation: waveMove 2.4s linear infinite;
+        "></div>
+    </div>
+    <!-- Percentage -->
+    <div style="
+        position: absolute;
+        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-weight: bold;
-        font-size: 1.3rem;
+        font-weight: 900;
+        font-size: 2.6rem;
+        color: #0f172a;
+        text-shadow: 0 1px 3px rgba(255,255,255,0.7);
+        pointer-events: none;
     ">
         {progress_pct:.1f}%
     </div>
 </div>
 """
+
 st.markdown(progress_html, unsafe_allow_html=True)
+
 
 # ──────────────────────────────────────────────
 # Charts: Bar + Pie
@@ -265,8 +306,8 @@ with col_left:
 
 with col_right:
     fig_pie = px.pie(
-        values=[watched, total - watched],
-        names=["Watched 🌸", "Remaining ⏳"],
+        values=[watched_size, total_size - watched_size],
+        names=[f"Watched {watched_folder_name}", "Remaining ⏳"],
         title="Watched vs Remaining",
         hole=0.4,
         color_discrete_sequence=["#e0e0e0", "#00c853"]
@@ -332,63 +373,63 @@ if chapters:
 motivations = [
     "You're absolutely crushing it! Keep the fire burning 🔥",
     f"Level {int(progress_pct // 20)} unlocked! Your XP is skyrocketing 🎉",
-    "Every 🌸 you add is a step closer to true mastery 💪",
+    f"Every {watched_folder_name} you add is a step closer to true mastery 💪",
     "Watch. Learn. Code. Conquer. Repeat. You're unstoppable 🌟",
     "You're not just watching — you're building an empire of skills 🏗️",
-    "Keep stacking those 🌸 — small efforts compound into greatness 📈",
+    f"Keep stacking those {watched_folder_name} — small efforts compound into greatness 📈",
     "Tiny steps every day = giant leaps tomorrow 🚀",
-    "Another 🌸 completed! Your consistency is shining 💎",
+    f"Another {watched_folder_name} completed! Your consistency is shining 💎",
     "Consistency > intensity. Keep showing up 💯",
     "Learning never stops — each 🌱 grows into a forest of knowledge 🌱",
     "You're coding your way to greatness — one video at a time 💻",
-    "Every watched 🌸 is a win. Celebrate your growth 🎊",
+    f"Every watched {watched_folder_name} is a win. Celebrate your growth 🎊",
     "Focus, watch, repeat — your future self will thank you 🙏",
     "The more you learn, the more powerful you become 🧠💰",
     "Level up unlocked! Your skill tree expands ✨",
     "Persistence beats resistance. Keep pushing forward 🔧",
-    "Stacked 🌸s today, mastery tomorrow 🏆",
+    f"Stacked {watched_folder_name}s today, mastery tomorrow 🏆",
     "Don't just watch, absorb and implement! 🌟",
     "Your dedication is inspiring — keep going, Ali! 💜",
     "Every video is a seed — soon you'll have a forest of skills 🌳",
-    "Mastery is built one 🌸 at a time — keep planting 🌱",
+    f"Mastery is built one {watched_folder_name} at a time — keep planting 🌱",
     "Learning is a marathon, not a sprint. Pace yourself 🏃‍♂️",
     "You're turning knowledge into power — keep going ⚡",
     "Another chapter conquered! You're unstoppable 💥",
     "Remember: code, learn, repeat, succeed 🔄",
-    "Your skill tree is growing! More 🌸 unlocked 🌟",
+    f"Your skill tree is growing! More {watched_folder_name} unlocked 🌟",
     "Stay curious, stay hungry, stay awesome 😎",
-    "Every watched 🌸 is progress in disguise 👀",
+    f"Every watched {watched_folder_name} is progress in disguise 👀",
     "You're investing in yourself — best ROI ever 💰",
     "Keep your eyes on the prize, one video at a time 🏅",
     "Knowledge is power, but action multiplies it 💡",
     "Code. Debug. Learn. Repeat. Your future is bright 🔮",
-    "The forest of 🌸s is growing — you're the gardener 🌿",
-    "Each 🌸 you watch is a trophy of effort 🏆",
+    f"The forest of {watched_folder_name}s is growing — you're the gardener 🌿",
+    f"Each {watched_folder_name} you watch is a trophy of effort 🏆",
     "You're leveling up faster than you think ⏩",
     "Your brain is a muscle — and you're lifting heavy today 🧠💪",
     "Step by step, video by video — you're creating magic ✨",
-    "Every minute counts. Keep stacking those 🌸 ⏱️",
+    f"Every minute counts. Keep stacking those {watched_folder_name} ⏱️",
     "The journey is long, but the progress is undeniable 🌄",
-    "One more 🌸 today — tomorrow you'll thank yourself 🙌",
+    f"One more {watched_folder_name} today — tomorrow you'll thank yourself 🙌",
     "You're not just watching — you're building lifelong skills 💼",
     "Your consistency is legendary — keep it going 🏹",
     "Every chapter mastered is a story of perseverance 📖",
     "Watch, learn, implement, repeat — the skill loop 🔁",
-    "You're shaping your future one 🌸 at a time 🏗️",
+    f"You're shaping your future one {watched_folder_name} at a time 🏗️",
     "Small wins today = massive victories tomorrow 🏔️",
     "Keep your momentum. The compounding effect is strong 💥",
     "Your progress bar is not lying — you're rocking it 📊",
-    "Another day, another 🌸 — progress never sleeps 😴",
+    f"Another day, another {watched_folder_name} — progress never sleeps 😴",
     "Your dedication is your superpower 🦸‍♂️",
     "Learning + Action = Success Formula ✅",
-    "Every 🌸 watched = step closer to mastery 🥇",
-    "Celebrate every 🌸 — even tiny wins matter 🌟",
+    f"Every {watched_folder_name} watched = step closer to mastery 🥇",
+    f"Celebrate every {watched_folder_name} — even tiny wins matter 🌟",
     "Each chapter completed is a medal of effort 🏅",
     "Your curiosity is your compass — keep exploring 🧭",
     "Every line of code you watch is shaping your future 🖥️",
     "You're the architect of your skill universe 🏗️✨",
     "Progress today = freedom tomorrow 🌌",
-    "Each 🌸 is a spark lighting the path to mastery 🔥",
+    f"Each {watched_folder_name} is a spark lighting the path to mastery 🔥",
     "Keep learning, keep growing, keep glowing 🌱💫",
 ]
 
@@ -411,7 +452,7 @@ st.markdown(f"""
         “ {quote} ”
     </div>
     <div style="font-size: 1.15rem; opacity: 0.9; font-weight: 500;">
-        Stay consistent, Ali — greatness is built one 🌸 at a time ✨
+        Stay consistent, Ali — greatness is built one {watched_folder_name} at a time ✨
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -426,19 +467,30 @@ with cols[1]:
 # ──────────────────────────────────────────────
 st.markdown("### Unlocked Badges 🌟")
 badges = [
-    {"name": "Starter", "emoji": "🌱",
+    {"name": "Seed",      "emoji": "🌱",
+        "gradient": "linear-gradient(135deg, #bbf7d0, #86efac)"},
+    {"name": "Sprout",    "emoji": "🌿",
         "gradient": "linear-gradient(135deg, #6ee7b7, #34d399)"},
-    {"name": "Growing", "emoji": "🌿",
-        "gradient": "linear-gradient(135deg, #6ee7b7, #10b981)"},
-    {"name": "Solid", "emoji": "🌳",
+    {"name": "Learner",   "emoji": "📘",
+        "gradient": "linear-gradient(135deg, #93c5fd, #60a5fa)"},
+    {"name": "Builder",   "emoji": "🧱",
+        "gradient": "linear-gradient(135deg, #818cf8, #6366f1)"},
+    {"name": "Solid",     "emoji": "🌳",
         "gradient": "linear-gradient(135deg, #fde047, #f59e0b)"},
-    {"name": "Master", "emoji": "🌸",
+    {"name": "Skilled",   "emoji": "⚒️",
+        "gradient": "linear-gradient(135deg, #facc15, #eab308)"},
+    {"name": "Expert",    "emoji": "🧠",
         "gradient": "linear-gradient(135deg, #a78bfa, #7c3aed)"},
-    {"name": "Legend", "emoji": "🔥",
-        "gradient": "linear-gradient(135deg, #ef4444, #b91c1c)"},
+    {"name": "Master",    "emoji": "🌸",
+        "gradient": "linear-gradient(135deg, #c084fc, #9333ea)"},
+    {"name": "Elite",     "emoji": "🔥",
+        "gradient": "linear-gradient(135deg, #f87171, #ef4444)"},
+    {"name": "Legend",    "emoji": "🏆",
+        "gradient": "linear-gradient(135deg, #f59e0b, #b45309)"},
 ]
 
-unlocked_count = min(int(progress_pct//20), len(badges)-1)
+unlocked_count = min(int(progress_pct // 10), len(badges) - 1)
+
 cols = st.columns(5)
 for i, badge in enumerate(badges):
     with cols[i % 5]:
@@ -465,3 +517,18 @@ for i, badge in enumerate(badges):
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+# ──────────────────────────────────────────────
+# Badge Progress Message
+# ──────────────────────────────────────────────
+
+total_badges = len(badges)
+current_level = min(int(progress_pct // 10), total_badges - 1)
+
+if current_level < total_badges - 1:
+    next_badge = badges[current_level + 1]['name']
+    st.info(
+        f"🎯 Reach {next_badge} badge! Only {10 - (progress_pct % 10):.1f}% more to unlock.")
+else:
+    st.success(
+        f"🏆 Congratulations! You've unlocked all badges and completed the course progress! 🎉")
