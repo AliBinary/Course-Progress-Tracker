@@ -444,7 +444,7 @@ def change_quote():
 quote = st.session_state.quote
 st.markdown(f"""
 <div style="
-    background: linear-gradient(135deg, #1e293b 0%, #111827 100%);
+    background: linear-gradient(135deg, #2b3a57 0%, #3a2e4c 40%, #1c1a20 100%);
     border-radius: 20px; padding: 40px 32px; margin: 32px auto;
     max-width: 1000px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     text-align: center; color: #e2e8f0; border: 1px solid rgba(139, 92, 246, 0.2);">
@@ -452,7 +452,7 @@ st.markdown(f"""
         “ {quote} ”
     </div>
     <div style="font-size: 1.15rem; opacity: 0.9; font-weight: 500;">
-        Stay consistent, Ali — greatness is built one {watched_folder_name} at a time ✨
+        Consistency is key, My Friend — keep going ✨
     </div>
 </div>
 """, unsafe_allow_html=True)
