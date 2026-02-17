@@ -33,6 +33,16 @@ Course-Progress-Tracker lets you monitor watched videos in downloaded offline co
 
 That's it! No coding, no configuration headaches — just run the script in any course folder where your videos are stored.
 
+## Screenshots
+
+![Course Progress Tracker Screenshot1](Demo/Screenshot1.png)
+
+![Course Progress Tracker Screenshot1](Demo/Screenshot2.png)
+
+![Course Progress Tracker Screenshot1](Demo/Screenshot3.png)
+
+![Course Progress Tracker Screenshot1](Demo/Screenshot4.png)
+
 ## Demo
 
 ![Course Progress Tracker Demo](Demo/demo.gif)
