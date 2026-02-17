@@ -33,6 +33,10 @@ Course-Progress-Tracker lets you monitor watched videos in downloaded offline co
 
 That's it! No coding, no configuration headaches — just run the script in any course folder where your videos are stored.
 
+## Demo
+
+![Course Progress Tracker Demo](demo.gif)
+
 ## Folder Structure
 
 ```
@@ -41,7 +45,7 @@ Course-Progress-Tracker/        # Project folder (fixed location)
 ├─ app.py                       # Main Streamlit application
 ├─ README.md
 └─ run.bat (template)           # Copy this file into any course folder
-
+└─ demo.gif
 
 YourCourseFolder/               # Any offline course you are watching
 │
