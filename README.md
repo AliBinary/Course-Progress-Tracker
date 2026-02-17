@@ -35,7 +35,7 @@ That's it! No coding, no configuration headaches — just run the script in any 
 
 ## Demo
 
-![Course Progress Tracker Demo](demo.gif)
+![Course Progress Tracker Demo](Demo/demo.gif)
 
 ## Folder Structure
 
