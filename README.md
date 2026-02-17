@@ -36,17 +36,29 @@ That's it! No coding, no configuration headaches — just run the script in any 
 ## Folder Structure
 
 ```
-YourCourseFolder/
+Course-Progress-Tracker/        # Project folder (fixed location)
 │
-├─ run.bat
-├─ app.py
+├─ app.py                       # Main Streamlit application
+├─ README.md
+└─ run.bat (template)           # Copy this file into any course folder
+
+
+YourCourseFolder/               # Any offline course you are watching
+│
+├─ run.bat                      # Only this file is needed here
+│
 ├─ Chapter 1/
 │   ├─ video1.mp4
 │   ├─ video2.mp4
-│   └─ (🌸)/   # watched videos (optional)
+│   └─ (🌸)/                    # Watched videos (partial chapter)
+│
 ├─ Chapter 2/
+│   ├─ video1.mp4
 │   └─ ...
-└─ (🌸)/       # fully watched chapters (optional)
+│
+└─ (🌸)/                        # Fully watched chapters
+    ├─ Chapter 3/
+    └─ Chapter 4/
 ```
 
 ## License
