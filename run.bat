@@ -13,6 +13,16 @@ IF ERRORLEVEL 1 (
 )
 
 REM --------------------------------------------------
+REM Check if Streamlit is already running
+REM --------------------------------------------------
+tasklist | findstr /i streamlit >nul
+IF NOT ERRORLEVEL 1 (
+    echo Streamlit is already running.
+    pause
+    exit /b
+)
+
+REM --------------------------------------------------
 REM Run Streamlit app
 REM The current folder (course root) is passed automatically
 REM --------------------------------------------------

@@ -76,7 +76,7 @@ def detect_watched_folder(root_path):
 
 
 # Try to detect watched folder
-auto_watched = detect_watched_folder(default_path)
+auto_watched = detect_watched_folder(course_root)
 
 watched_folder_name = st.text_input(
     "Watched folder name (for marking completed videos)",
@@ -92,7 +92,7 @@ watched_folder_name = validate_folder_name(watched_folder_name)
 # Scan course structure: normal + fully-watched chapters
 # ──────────────────────────────────────────────
 
-
+# @st.cache_data(show_spinner=False)
 def scan_course(root_path: str, video_ext, watched_subfolder):
     chapters = {}
     total_videos = 0
@@ -131,7 +131,7 @@ def scan_course(root_path: str, video_ext, watched_subfolder):
             size = f.stat().st_size / (1024 ** 3)
             chapter_total += 1
             chapter_size += size
-            if os.path.basename(os.path.dirname(f.path)) == watched_subfolder:
+            if os.path.normpath(watched_subfolder) in os.path.normpath(f.path):
                 chapter_watched += 1
                 chapter_watched_size += size
 
@@ -463,34 +463,54 @@ with cols[1]:
               help="Click to see a new motivational quote")
 
 # ──────────────────────────────────────────────
-# Badges
+# Badges with Hover Tooltip
 # ──────────────────────────────────────────────
 st.markdown("### Unlocked Badges 🌟")
+
 badges = [
-    {"name": "Seed",      "emoji": "🌱",
-        "gradient": "linear-gradient(135deg, #bbf7d0, #86efac)"},
-    {"name": "Sprout",    "emoji": "🌿",
-        "gradient": "linear-gradient(135deg, #6ee7b7, #34d399)"},
-    {"name": "Learner",   "emoji": "📘",
-        "gradient": "linear-gradient(135deg, #93c5fd, #60a5fa)"},
-    {"name": "Builder",   "emoji": "🧱",
-        "gradient": "linear-gradient(135deg, #818cf8, #6366f1)"},
-    {"name": "Solid",     "emoji": "🌳",
-        "gradient": "linear-gradient(135deg, #fde047, #f59e0b)"},
-    {"name": "Skilled",   "emoji": "⚒️",
-        "gradient": "linear-gradient(135deg, #facc15, #eab308)"},
-    {"name": "Expert",    "emoji": "🧠",
-        "gradient": "linear-gradient(135deg, #a78bfa, #7c3aed)"},
-    {"name": "Master",    "emoji": "🌸",
-        "gradient": "linear-gradient(135deg, #c084fc, #9333ea)"},
-    {"name": "Elite",     "emoji": "🔥",
-        "gradient": "linear-gradient(135deg, #f87171, #ef4444)"},
-    {"name": "Legend",    "emoji": "🏆",
-        "gradient": "linear-gradient(135deg, #f59e0b, #b45309)"},
+    {"name": "Seed",        "emoji": "🌱",
+        "gradient": "linear-gradient(135deg, #bbf7d0, #86efac)", "desc": "First step: You started your learning journey."},
+    {"name": "Sprout",      "emoji": "🌿",
+        "gradient": "linear-gradient(135deg, #6ee7b7, #34d399)", "desc": "Your knowledge is growing steadily."},
+    {"name": "Bookworm",    "emoji": "📘",
+        "gradient": "linear-gradient(135deg, #93c5fd, #60a5fa)", "desc": "You're diving into learning materials."},
+    {"name": "Builder",     "emoji": "🧱",
+        "gradient": "linear-gradient(135deg, #818cf8, #6366f1)", "desc": "Applying knowledge to build skills."},
+    {"name": "Tree",        "emoji": "🌳",
+        "gradient": "linear-gradient(135deg, #fde047, #f59e0b)", "desc": "Your understanding is solid and growing."},
+    {"name": "Craftsman",   "emoji": "⚒️",
+        "gradient": "linear-gradient(135deg, #facc15, #eab308)", "desc": "You're honing your craft."},
+    {"name": "Expert",      "emoji": "🧠",
+        "gradient": "linear-gradient(135deg, #a78bfa, #7c3aed)", "desc": "Deep expertise is forming."},
+    {"name": "Master",      "emoji": "🌸",
+        "gradient": "linear-gradient(135deg, #c084fc, #9333ea)", "desc": "Skill mastery achieved."},
+    {"name": "Elite",       "emoji": "🔥",
+        "gradient": "linear-gradient(135deg, #f87171, #ef4444)", "desc": "High-level mastery unlocked."},
+    {"name": "Legend",      "emoji": "🏆",
+        "gradient": "linear-gradient(135deg, #f59e0b, #b45309)", "desc": "Legendary status! Course fully conquered."},
 ]
 
-unlocked_count = min(int(progress_pct // 10), len(badges) - 1)
+# ───────────── Badge thresholds ─────────────
+badge_thresholds = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95]
 
+total_badges = len(badges)
+progress = progress_pct  # current overall progress %
+
+# ───────────── Compute unlocked badges ─────────────
+unlocked_count = 0
+for i, threshold in enumerate(badge_thresholds):
+    if progress >= threshold:
+        unlocked_count = i
+    else:
+        break
+
+# Ensure below first threshold nothing is unlocked
+if progress < badge_thresholds[0]:
+    unlocked_count = -1  # no badge unlocked yet
+
+current_level = unlocked_count  # single source of truth
+
+# ───────────── Display badges with tooltip ─────────────
 cols = st.columns(5)
 for i, badge in enumerate(badges):
     with cols[i % 5]:
@@ -504,15 +524,16 @@ for i, badge in enumerate(badges):
         )
         if is_unlocked:
             card_style += "cursor: pointer;"
+
         st.markdown(f"""
-        <div style="{card_style}">
-            <div style="font-size: 3.2rem; line-height: 1; margin-bottom: 8px; filter: {'drop-shadow(0 0 10px rgba(255,255,255,0.7))' if is_unlocked else 'grayscale(80%)'};">
+        <div style="{card_style}" title="{badge['desc']}">
+            <div style="font-size: 3.2rem; line-height: 1; margin-bottom: 4px; filter: {'drop-shadow(0 0 10px rgba(255,255,255,0.7))' if is_unlocked else 'grayscale(80%)'};">
                 {badge['emoji']}
             </div>
             <div style="font-weight: bold; font-size: 1.1rem; color: {'white' if is_unlocked else '#9ca3af'};">
                 {badge['name']}
             </div>
-            <div style="font-size: 0.85rem; margin-top: 4px; color: {'#e5e7eb' if is_unlocked else '#6b7280'};">
+            <div style="font-size: 0.75rem; margin-top: 2px; color: {'#fff' if is_unlocked else '#6b7280'};">
                 {'Unlocked!' if is_unlocked else 'Locked'}
             </div>
         </div>
@@ -521,14 +542,66 @@ for i, badge in enumerate(badges):
 # ──────────────────────────────────────────────
 # Badge Progress Message
 # ──────────────────────────────────────────────
-
-total_badges = len(badges)
-current_level = min(int(progress_pct // 10), total_badges - 1)
-
 if current_level < total_badges - 1:
-    next_badge = badges[current_level + 1]['name']
+    next_badge_index = current_level + 1
+    next_badge = badges[next_badge_index]['name']
+    remaining = max(0, badge_thresholds[next_badge_index] - progress)
     st.info(
-        f"🎯 Reach {next_badge} badge! Only {10 - (progress_pct % 10):.1f}% more to unlock.")
+        f"🎯 Reach {next_badge} badge! Only {remaining:.1f}% more to unlock."
+    )
 else:
-    st.success(
-        f"🏆 Congratulations! You've unlocked all badges and completed the course progress! 🎉")
+    if progress >= 100:
+        st.success(
+            "🏆 Congratulations! You've unlocked all badges and completed the course! 🎉🎉🎉"
+        )
+    else:
+        remaining = max(0, 100 - progress)
+        st.success(
+            f"🏆 All badges unlocked! Only {remaining:.1f}% remaining to complete the course!"
+        )
+
+# ──────────────────────────────────────────────
+# AliBinary (Ali Ghanbari)
+# ──────────────────────────────────────────────
+
+st.markdown("""
+<style>
+@keyframes heartBeat {
+    0%   { transform: scale(1); }
+    14%  { transform: scale(1.5); }
+    28%  { transform: scale(1); }
+    42%  { transform: scale(1.5); }
+    70%  { transform: scale(1); }
+    100% { transform: scale(1); }
+}
+.footer {
+    margin: 8px 0 -30px 0;
+    padding: 0;
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    line-height: 1.2;
+}
+.heart {
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    margin: 0 4px;
+    color: #f43f5e;
+    animation: heartBeat 1.6s ease-in-out infinite;
+}
+.footer a {
+    color: #a78bfa;
+    text-decoration: none;
+    font-weight: 700;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
+</style>
+<div class="footer">
+    Built with <span class="heart">❤️</span> by 
+    <a href="https://github.com/AliBinary" target="_blank">Ali Binary</a>
+</div>
+""", unsafe_allow_html=True)
