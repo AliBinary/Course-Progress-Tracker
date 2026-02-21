@@ -602,6 +602,6 @@ st.markdown("""
 </style>
 <div class="footer">
     Built with <span class="heart">❤️</span> by 
-    <a href="https://github.com/AliBinary" target="_blank">Ali Binary</a>
+    <a href="https://github.com/AliBinary" target="_blank">Ali Ghanbari</a>
 </div>
 """, unsafe_allow_html=True)
